@@ -21,17 +21,22 @@ import { Task } from './entites/task.entity';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from 'src/common/enums/task-status.enum';
 import { TaskStatusValidationPipe } from 'src/common/pipes/task-status-validation.pipe';
-import { Roles } from 'src/common/decorators/roles.decorator';
-import { Role } from 'src/common/enums/role.enum';
-import { RolesGuard } from 'src/common/guards/roles.guard';
+import { AppAbility, CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import { Action } from 'src/common/enums/action.enum';
+import { PoliciesGuard } from 'src/common/guards/policies.guard';
+import { CheckPolicies } from 'src/common/decorators/policies.decorator';
 
 @Controller('tasks')
-@UseGuards(AuthGuard(), RolesGuard)
+@UseGuards(AuthGuard())
 export class TasksController {
-  constructor(private tasksService: TasksService) {}
+  constructor(
+    private tasksService: TasksService,
+    private caslAbilityFactory: CaslAbilityFactory,
+  ) {}
 
   @Get('/admin')
-  @Roles(Role.Admin)
+  @UseGuards(PoliciesGuard)
+  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Task))
   @UsePipes(ValidationPipe)
   getAllTasks(@Query() filterDto: GetTasksFilterDto): Promise<Task[]> {
     return this.tasksService.getAllTasks(filterDto);
@@ -43,6 +48,11 @@ export class TasksController {
     @Query() filterDto: GetTasksFilterDto,
     @GetUser() user: User,
   ): Promise<Task[]> {
+    const ability = this.caslAbilityFactory.createForUser(user);
+    if (ability.can(Action.Read, 'all')) {
+      console.log('admin');
+      // "user" has read access to everything
+    }
     return this.tasksService.getTasks(filterDto, user);
   }
 

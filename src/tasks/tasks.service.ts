@@ -1,5 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import { Action } from 'src/common/enums/action.enum';
 import { TaskStatus } from 'src/common/enums/task-status.enum';
 import { User } from 'src/users/entities/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -11,6 +17,7 @@ import { TaskRepository } from './repositories/task.repository';
 export class TasksService {
   constructor(
     @InjectRepository(TaskRepository) private taskRepository: TaskRepository,
+    private caslAbilityFactory: CaslAbilityFactory,
   ) {}
 
   async getAllTasks(filterDto: GetTasksFilterDto): Promise<Task[]> {
@@ -36,7 +43,13 @@ export class TasksService {
   async deleteTaskById(id: number, user: User): Promise<Task> {
     const found = await this.getTaskById(id, user);
     if (!found) throw new NotFoundException(`Task with ID "${id}" not found`);
-    await this.taskRepository.remove(found);
+    if (this.caslAbilityFactory.createForUser(user).can(Action.Delete, found)) {
+      await this.taskRepository.remove(found);
+    } else {
+      throw new ForbiddenException(
+        `Can't delete task with ID "${id}". It's has "DONE"`,
+      );
+    }
     return found;
   }
 
