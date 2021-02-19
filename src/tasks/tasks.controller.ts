@@ -21,11 +21,21 @@ import { Task } from './entites/task.entity';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from 'src/common/enums/task-status.enum';
 import { TaskStatusValidationPipe } from 'src/common/pipes/task-status-validation.pipe';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { Role } from 'src/common/enums/role.enum';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Controller('tasks')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard(), RolesGuard)
 export class TasksController {
   constructor(private tasksService: TasksService) {}
+
+  @Get('/admin')
+  @Roles(Role.Admin)
+  @UsePipes(ValidationPipe)
+  getAllTasks(@Query() filterDto: GetTasksFilterDto): Promise<Task[]> {
+    return this.tasksService.getAllTasks(filterDto);
+  }
 
   @Get()
   @UsePipes(ValidationPipe)
