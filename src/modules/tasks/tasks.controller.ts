@@ -51,11 +51,6 @@ export class TasksController {
     @Query() filterDto: GetTasksFilterDto,
     @GetUser() user: User,
   ): Promise<Task[]> {
-    const ability = this.caslAbilityFactory.createForUser(user);
-    if (ability.can(Action.Read, 'all')) {
-      console.log('admin');
-      // "user" has read access to everything
-    }
     return this.tasksService.getTasks(filterDto, user);
   }
 
