@@ -12,6 +12,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { User } from 'src/modules/users/entities/user.entity';
@@ -29,6 +30,7 @@ import { Action } from 'src/common/enums/action.enum';
 import { PoliciesGuard } from 'src/common/guards/policies.guard';
 import { CheckPolicies } from 'src/common/decorators/policies.decorator';
 
+@ApiTags('tasks')
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
