@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Task } from 'src/tasks/entites/task.entity';
+import { Task } from 'src/modules/tasks/entites/task.entity';
 import { Role } from 'src/common/enums/role.enum';
 
 @Entity()

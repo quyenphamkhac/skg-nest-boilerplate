@@ -4,10 +4,10 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import { CaslAbilityFactory } from 'src/modules/casl/casl-ability.factory';
 import { Action } from 'src/common/enums/action.enum';
 import { TaskStatus } from 'src/common/enums/task-status.enum';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { Task } from './entites/task.entity';

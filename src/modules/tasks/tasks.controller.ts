@@ -14,14 +14,17 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
-import { User } from 'src/users/entities/user.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto';
 import { Task } from './entites/task.entity';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from 'src/common/enums/task-status.enum';
 import { TaskStatusValidationPipe } from 'src/common/pipes/task-status-validation.pipe';
-import { AppAbility, CaslAbilityFactory } from 'src/casl/casl-ability.factory';
+import {
+  AppAbility,
+  CaslAbilityFactory,
+} from 'src/modules/casl/casl-ability.factory';
 import { Action } from 'src/common/enums/action.enum';
 import { PoliciesGuard } from 'src/common/guards/policies.guard';
 import { CheckPolicies } from 'src/common/decorators/policies.decorator';

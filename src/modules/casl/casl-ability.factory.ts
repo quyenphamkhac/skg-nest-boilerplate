@@ -9,8 +9,8 @@ import { Injectable } from '@nestjs/common';
 import { Action } from 'src/common/enums/action.enum';
 import { Role } from 'src/common/enums/role.enum';
 import { TaskStatus } from 'src/common/enums/task-status.enum';
-import { Task } from 'src/tasks/entites/task.entity';
-import { User } from 'src/users/entities/user.entity';
+import { Task } from 'src/modules/tasks/entites/task.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 
 type Subjects = InferSubjects<typeof Task | typeof User> | 'all';
 
