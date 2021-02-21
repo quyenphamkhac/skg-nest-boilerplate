@@ -1,6 +1,7 @@
 import { TaskStatus } from 'src/common/enums/task-status.enum';
 import { User } from 'src/modules/users/entities/user.entity';
-import { EntityRepository, Repository } from 'typeorm';
+import { PaginationDto, PaginationOptions } from 'src/shared/pagination.dto';
+import { EntityRepository, ILike, Repository } from 'typeorm';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { GetTasksFilterDto } from '../dto/get-tasks-filter.dto';
 import { Task } from '../entites/task.entity';
@@ -23,21 +24,32 @@ export class TaskRepository extends Repository<Task> {
     return tasks;
   }
 
-  async getTasks(filterDto: GetTasksFilterDto, user: User): Promise<Task[]> {
+  async getTasks(
+    filterDto: GetTasksFilterDto,
+    user: User,
+    paginationOptions: PaginationOptions,
+  ): Promise<PaginationDto<Task>> {
     const { status, search } = filterDto;
-    const query = this.createQueryBuilder('task');
-    query.where('task.userId = :userId', { userId: user.id });
+    const { limit, offset } = paginationOptions;
+    const where = {
+      ...(status && { status }),
+      ...(search && { title: ILike(`%${search}%`) }),
+      ...(search && { description: ILike(`%${search}%`) }),
+    };
     if (status) {
-      query.andWhere('task.status = :status', { status });
+      where.status = status;
     }
-    if (search) {
-      query.andWhere(
-        '(task.title ILIKE :search OR task.description ILIKE :search)',
-        { search: `%${search}%` },
-      );
-    }
-    const tasks = await query.getMany();
-    return tasks;
+    const [tasks, total] = await this.findAndCount({
+      where,
+      take: limit,
+      skip: offset,
+    });
+    return {
+      results: tasks,
+      total,
+      limit,
+      offset,
+    };
   }
 
   async createTask(createTaskDto: CreateTaskDto, user: User): Promise<Task> {

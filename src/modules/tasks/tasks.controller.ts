@@ -22,38 +22,23 @@ import { Task } from './entites/task.entity';
 import { TasksService } from './tasks.service';
 import { TaskStatus } from 'src/common/enums/task-status.enum';
 import { TaskStatusValidationPipe } from 'src/common/pipes/task-status-validation.pipe';
-import {
-  AppAbility,
-  CaslAbilityFactory,
-} from 'src/modules/casl/casl-ability.factory';
-import { Action } from 'src/common/enums/action.enum';
-import { PoliciesGuard } from 'src/common/guards/policies.guard';
-import { CheckPolicies } from 'src/common/decorators/policies.decorator';
+import { Pagination } from 'src/common/decorators/panigated-options.decorator';
+import { PaginationDto, PaginationOptions } from 'src/shared/pagination.dto';
 
 @ApiTags('tasks')
 @Controller('tasks')
 @UseGuards(AuthGuard())
 export class TasksController {
-  constructor(
-    private tasksService: TasksService,
-    private caslAbilityFactory: CaslAbilityFactory,
-  ) {}
-
-  @Get('/admin')
-  @UseGuards(PoliciesGuard)
-  @CheckPolicies((ability: AppAbility) => ability.can(Action.Read, Task))
-  @UsePipes(ValidationPipe)
-  getAllTasks(@Query() filterDto: GetTasksFilterDto): Promise<Task[]> {
-    return this.tasksService.getAllTasks(filterDto);
-  }
+  constructor(private tasksService: TasksService) {}
 
   @Get()
   @UsePipes(ValidationPipe)
   getTasks(
     @Query() filterDto: GetTasksFilterDto,
     @GetUser() user: User,
-  ): Promise<Task[]> {
-    return this.tasksService.getTasks(filterDto, user);
+    @Pagination() paginationOptions: PaginationOptions,
+  ): Promise<PaginationDto<Task>> {
+    return this.tasksService.getTasks(filterDto, user, paginationOptions);
   }
 
   @Get('/:id')
