@@ -45,7 +45,7 @@ export class TaskRepository extends Repository<Task> {
       skip: offset,
     });
     return {
-      results: tasks,
+      items: tasks,
       total,
       limit,
       offset,
