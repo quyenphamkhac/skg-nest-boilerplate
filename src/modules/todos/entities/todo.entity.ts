@@ -1,15 +1,22 @@
 import { User } from 'src/modules/users/entities/user.entity';
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+} from 'typeorm';
 
 @Entity()
 export class Todo extends BaseEntity {
   @PrimaryColumn()
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   title: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @ManyToOne(() => User, (user) => user.todos)
@@ -17,4 +24,7 @@ export class Todo extends BaseEntity {
 
   @Column()
   userId: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 }

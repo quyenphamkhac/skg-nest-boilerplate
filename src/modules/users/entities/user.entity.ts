@@ -2,24 +2,23 @@ import {
   BaseEntity,
   Column,
   Entity,
-  Unique,
   OneToMany,
   PrimaryColumn,
+  CreateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Todo } from 'src/modules/todos/entities/todo.entity';
 import { Task } from 'src/modules/tasks/entites/task.entity';
 
 @Entity()
-@Unique(['username'])
 export class User extends BaseEntity {
   @PrimaryColumn()
   id: string;
 
-  @Column()
+  @Column({ nullable: true })
   username: string;
 
-  @Column()
+  @Column({ nullable: true })
   name: string;
 
   @OneToMany(() => Todo, (todo) => todo.user)
@@ -28,11 +27,14 @@ export class User extends BaseEntity {
   @OneToMany(() => Task, (task) => task.user)
   tasks: Todo[];
 
-  @Column()
+  @Column({ nullable: true })
   salt: string;
 
-  @Column()
+  @Column({ nullable: true })
   password: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
 
   async validatePassword(password: string): Promise<boolean> {
     const hash = await bcrypt.hash(password, this.salt);

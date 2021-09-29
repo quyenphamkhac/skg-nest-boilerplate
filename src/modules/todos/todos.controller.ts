@@ -1,7 +1,7 @@
 import { Controller } from '@nestjs/common';
-import { TodoRepository } from './repositories/todo.repository';
+import { TodoService } from './todos.service';
 
 @Controller('todos')
 export class TodoController {
-  constructor(private todosService: TodoRepository) {}
+  constructor(private todosService: TodoService) {}
 }
