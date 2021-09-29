@@ -8,6 +8,7 @@ import { CaslModule } from './modules/casl/casl.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { TodosModule } from './modules/todos/todos.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
     TasksModule,
     AuthModule,
     UsersModule,
+    TodosModule,
     CaslModule,
   ],
   providers: [
