@@ -3,19 +3,32 @@ import { AuthCredentialsDto } from '../dto/auth-credentials.dto';
 import { User } from '../entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { CreateUserDto } from '../dto/create-user-dto';
+import { UpdateUserDto } from '../dto/update-user-dto';
+import { NotFoundException } from '@nestjs/common';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
   async createUser(createUserDto: CreateUserDto): Promise<User> {
-    const { id, name, createdAt } = createUserDto;
+    const { id, name, createdAt, updatedAt } = createUserDto;
     const user = this.create({
       id,
       name,
       createdAt,
+      updatedAt,
     });
-    delete user.password;
-    delete user.salt;
-    delete user.username;
+    await user.save();
+    return user;
+  }
+
+  async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    const user = await this.findOne(id);
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} is not found.`);
+    }
+    const { name, createdAt, updatedAt } = updateUserDto;
+    if (name) user.name = name;
+    if (createdAt) user.createdAt = createdAt;
+    if (updatedAt) user.updatedAt = updatedAt;
     await user.save();
     return user;
   }

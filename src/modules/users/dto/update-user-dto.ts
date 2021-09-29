@@ -1,6 +1,6 @@
 import { IsDateString, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
-export class CreateUserDto {
+export class UpdateUserDto {
   @IsNotEmpty()
   @IsUUID()
   id: string;

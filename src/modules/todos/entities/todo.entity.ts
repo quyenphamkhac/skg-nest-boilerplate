@@ -6,6 +6,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
@@ -27,4 +28,7 @@ export class Todo extends BaseEntity {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }
