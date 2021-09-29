@@ -7,7 +7,6 @@ import {
 } from '@casl/ability';
 import { Injectable } from '@nestjs/common';
 import { Action } from 'src/common/enums/action.enum';
-import { Role } from 'src/common/enums/role.enum';
 import { TaskStatus } from 'src/common/enums/task-status.enum';
 import { Task } from 'src/modules/tasks/entites/task.entity';
 import { User } from 'src/modules/users/entities/user.entity';
@@ -22,7 +21,7 @@ export class CaslAbilityFactory {
     const { can, cannot, build } = new AbilityBuilder<
       Ability<[Action, Subjects]>
     >(Ability as AbilityClass<AppAbility>);
-    if (user.role === Role.Admin) {
+    if (user) {
       can(Action.Manage, 'all');
     } else {
       can(Action.Read, 'all');

@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { Todo } from 'src/modules/todos/entities/todo.entity';
+import { Task } from 'src/modules/tasks/entites/task.entity';
 
 @Entity()
 @Unique(['username'])
@@ -23,6 +24,9 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Todo, (todo) => todo.user)
   todos: Todo[];
+
+  @OneToMany(() => Task, (task) => task.user)
+  tasks: Todo[];
 
   @Column()
   salt: string;
