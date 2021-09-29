@@ -1,0 +1,32 @@
+version: '3.7'
+services:
+  app:
+    container_name: abcs
+    image: csnguyen/abcs-project:1.1
+    ports: 
+      - ${HOST_PORT}:${SERVER_PORT}
+    env_file: 
+      - .env
+    networks: 
+      - webnet
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres
+    image: postgres:12
+    ports:
+      - 5432:5432
+    env_file: 
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE_NAME}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks: 
+      - webnet
+volumes:
+  pgdata:
+networks: 
+  webnet:
