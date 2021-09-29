@@ -2,6 +2,8 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
+  Get,
   Param,
   ParseUUIDPipe,
   Patch,
@@ -15,10 +17,28 @@ import { CreateUserDto } from './dto/create-user-dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 import { User } from './entities/user.entity';
 import { UsersService } from './users.service';
+import { Pagination } from 'src/common/decorators/panigated-options.decorator';
+import { PaginationDto, PaginationOptions } from 'src/shared/pagination.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
+
+  @Get()
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findAll(
+    @Pagination() paginationOptions: PaginationOptions,
+  ): Promise<PaginationDto<User>> {
+    return this.userService.findAll(paginationOptions);
+  }
+
+  @Get('/:id')
+  @UsePipes(ValidationPipe)
+  @UseInterceptors(ClassSerializerInterceptor)
+  async findById(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
+    return this.userService.findUserById(id);
+  }
 
   @Post()
   @UsePipes(ValidationPipe)
@@ -34,7 +54,7 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() payload: UpdateUserDto,
   ): Promise<User> {
-    return this.userService.updateUser(id, payload);
+    return this.userService.updateUserById(id, payload);
   }
 
   @Put('/:id')
@@ -44,6 +64,12 @@ export class UsersController {
     @Param('id', ParseUUIDPipe) id: string,
     @Body() payload: UpdateUserDto,
   ): Promise<User> {
-    return this.userService.putUser(id, payload);
+    return this.userService.putUserById(id, payload);
+  }
+
+  @Delete('/:id')
+  @UseInterceptors(ClassSerializerInterceptor)
+  async deleteById(@Param('id', ParseUUIDPipe) id: string): Promise<User> {
+    return this.userService.deleteUserById(id);
   }
 }
