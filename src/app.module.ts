@@ -9,6 +9,7 @@ import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { TodosModule } from './modules/todos/todos.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { TodosModule } from './modules/todos/todos.module';
     AuthModule,
     UsersModule,
     TodosModule,
+    HealthModule,
     CaslModule,
   ],
   providers: [

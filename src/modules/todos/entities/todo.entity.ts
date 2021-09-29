@@ -18,7 +18,7 @@ export class Todo extends BaseEntity {
   title: string;
 
   @Column({ nullable: true })
-  description: string;
+  content: string;
 
   @ManyToOne(() => User, (user) => user.todos)
   user: User;

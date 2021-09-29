@@ -1,6 +1,6 @@
 import { IsDateString, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
-export class CreateTodoDto {
+export class UpdateTodoDto {
   @IsNotEmpty()
   @IsUUID()
   id: string;
@@ -11,7 +11,7 @@ export class CreateTodoDto {
   @IsOptional()
   content: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsUUID()
   userId: string;
 
