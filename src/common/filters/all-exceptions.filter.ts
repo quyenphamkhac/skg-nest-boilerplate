@@ -20,6 +20,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     let resp = {};
     if (exception instanceof HttpException) {
       const httpException = exception.getResponse().valueOf();
+      console.log(httpException);
       if (typeof httpException === 'object') {
         resp = {
           ...httpException,
