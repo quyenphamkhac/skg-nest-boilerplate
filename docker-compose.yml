@@ -2,7 +2,7 @@ version: '3.7'
 services:
   app:
     container_name: abcs
-    image: csnguyen/abcs-project:1.2
+    image: csnguyen/abcs-project:1.3
     ports: 
       - ${HOST_PORT}:${SERVER_PORT}
     env_file: 
