@@ -37,14 +37,14 @@ export class UsersService {
   }
 
   async findUserById(id: string): Promise<User> {
-    const found = await this.userRepository.findOne(id);
+    const found = await this.userRepository.findOne({ where: { id } });
     if (!found) throw new NotFoundException(`User with id ${id} is not found.`);
     return found;
   }
 
   async createUser(createUserDto: CreateUserDto): Promise<User> {
     const { id } = createUserDto;
-    const found = await this.userRepository.findOne(id);
+    const found = await this.userRepository.findOne({ where: { id } });
     if (found) {
       throw new ConflictException(`User with id ${id} is existed.`);
     }
@@ -69,13 +69,13 @@ export class UsersService {
         `Param id ${id} and payload id ${putUserDto.id} must be the same.`,
       );
     }
-    const found = await this.userRepository.findOne(id);
+    const found = await this.userRepository.findOne({ where: { id } });
     if (found) return this.userRepository.updateUser(id, putUserDto);
     else return this.userRepository.createUser(putUserDto);
   }
 
   async deleteUserById(id: string): Promise<User> {
-    const found = await this.userRepository.findOne(id);
+    const found = await this.userRepository.findOne({ where: { id } });
     if (!found) throw new NotFoundException(`User with id ${id} is not found.`);
     try {
       await this.userRepository.delete(id);

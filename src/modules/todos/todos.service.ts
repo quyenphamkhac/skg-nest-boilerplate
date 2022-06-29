@@ -37,14 +37,14 @@ export class TodoService {
   }
 
   async findTodoById(id: string): Promise<Todo> {
-    const found = await this.todoRepository.findOne(id);
+    const found = await this.todoRepository.findOne({ where: { id } });
     if (!found) throw new NotFoundException(`Todo with id ${id} is not found.`);
     return found;
   }
 
   async createTodo(payload: CreateTodoDto): Promise<Todo> {
     const { id } = payload;
-    const found = await this.todoRepository.findOne(id);
+    const found = await this.todoRepository.findOne({ where: { id } });
     if (found) throw new ConflictException(`Todo with id ${id} is existed.`);
     return this.todoRepository.createTodo(payload);
   }
@@ -63,13 +63,13 @@ export class TodoService {
       throw new BadRequestException(
         `Param id ${id} and payload id ${payload.id} must be the same.`,
       );
-    const found = await this.todoRepository.findOne(id);
+    const found = await this.todoRepository.findOne({ where: { id } });
     if (found) return this.todoRepository.updateTodo(id, payload);
     else return this.todoRepository.createTodo(payload);
   }
 
   async deleteUserById(id: string): Promise<Todo> {
-    const found = await this.todoRepository.findOne(id);
+    const found = await this.todoRepository.findOne({ where: { id } });
     if (!found) throw new NotFoundException(`Todo with id ${id} is not found.`);
     await this.todoRepository.delete(id);
     return found;

@@ -21,7 +21,7 @@ export class UserRepository extends Repository<User> {
   }
 
   async updateUser(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    const user = await this.findOne(id);
+    const user = await this.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with id ${id} is not found.`);
     }
@@ -48,7 +48,7 @@ export class UserRepository extends Repository<User> {
     authCredentialsDto: AuthCredentialsDto,
   ): Promise<User> {
     const { username, password } = authCredentialsDto;
-    const user = await this.findOne({ username });
+    const user = await this.findOne({ where: { username } });
     if (user && (await user.validatePassword(password))) {
       return user;
     } else {

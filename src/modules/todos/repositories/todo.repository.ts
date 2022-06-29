@@ -21,7 +21,7 @@ export class TodoRepository extends Repository<Todo> {
   }
 
   async updateTodo(id: string, payload: UpdateTodoDto): Promise<Todo> {
-    const todo = await this.findOne(id);
+    const todo = await this.findOne({ where: { id } });
     if (!todo) throw new NotFoundException(`Todo with id ${id} is not found.`);
     const { userId, title, content, createdAt, updatedAt } = payload;
     if (userId) todo.userId = userId;
